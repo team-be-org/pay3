@@ -5,10 +5,6 @@ import './App.css';
 
 const CONTRACT_ADDRESS = require("./utils/contractAddress.json").contractAddress;
 
-function sleep(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
 const App = () => {
   const [currentAccount, setCurrentAccount] = useState("")
   const [display, setDisplay] = useState("...")
@@ -27,7 +23,6 @@ const App = () => {
       console.log("We have the ethereum object", ethereum);
       console.log('window.ethereum.networkVersion', await ethereum.request({ method: 'net_version' }));
     }
-    
     const accounts = await ethereum.request({ method: 'eth_accounts' });
     
     if (accounts.length !== 0) {
@@ -96,6 +91,7 @@ const App = () => {
     }
   }
 
+  // Charge ETH to virtual wallet
   const ChargeExecution = async () => {
     try {
       const { ethereum } = window;
@@ -122,6 +118,7 @@ const App = () => {
     }
   }
 
+  // withdraw ETH from virtual wallet
   const WithdrawExecution = async () => {
     try {
       const { ethereum } = window;
@@ -141,6 +138,7 @@ const App = () => {
     }
   }
 
+  // Set subscription state
   const SubscriptionOnOff = async (state) => {
     const { ethereum } = window;
     if (!ethereum) {return}
@@ -160,7 +158,6 @@ const App = () => {
   const SubscriptionOn = async () => {
     await SubscriptionOnOff(true)
   }
-
   const SubscriptionOff = async () => {
     await SubscriptionOnOff(false)
   }
@@ -229,7 +226,7 @@ const App = () => {
     <div className="App">
       <div className="container">
         <div className="header-container">
-          <p className="header gradient-text">Pay3</p>
+          <p className="header gradient-text">Pay3 User Console</p>
           <p className="explain-text">
             Pay3 is a lightweight subscription payment solution</p>
           {currentAccount === "" ? renderNotConnectedContainer() :renderMintUI()}
