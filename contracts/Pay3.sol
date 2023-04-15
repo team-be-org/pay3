@@ -41,7 +41,7 @@ contract Pay3 is ERC721 {
     return tokenChargedValue[tokenID];
     }
 
-  function withdraw(uint256 tokenID) public {
+  function userWithdraw(uint256 tokenID) public {
     // check tokenID is owned by msg.sender
     require(ownerOf(tokenID) == msg.sender, "You are not the owner of this token");
 
