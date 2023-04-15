@@ -15,8 +15,12 @@ contract Pay3 is ERC721 {
     //subsribe state map
     mapping(uint256 => bool) public subscribeState;
     mapping(uint256 => uint256) public tokenChargedValue;
+    uint256 public servicerWallet;
+    uint256 public serviceFee;
 
-    constructor() ERC721("Pay3", "PAY3") {}
+    constructor() ERC721("Pay3", "PAY3") {
+        serviceFee = 0.01 ether;
+    }
 
     function mint() public payable returns (uint256) {
         currentTokenId.increment();
@@ -32,8 +36,6 @@ contract Pay3 is ERC721 {
         require(msg.value > 0, "You need to send some Ether");
         console.log("msg.value is %s", msg.value);
         tokenChargedValue[tokenID] += msg.value;
-
-
     }
 
     function getTokenChargedValue(uint256 tokenID) public view returns (uint256) {
@@ -51,5 +53,17 @@ contract Pay3 is ERC721 {
     (success, ) = recipient.call{value: amount}("");
     require(success, "Failed to transfer Ether");
     tokenChargedValue[tokenID] = 0;
+  }
+
+  function moneyCollection() public {
+    console.log(currentTokenId.current());
+    for(uint256 i = 1; i <= currentTokenId.current(); i++) {
+    if(subscribeState[i] == true) {
+        if(tokenChargedValue[i] > serviceFee){
+        tokenChargedValue[i]-= serviceFee;
+        servicerWallet += serviceFee;
+        }
+    }
+}
   }
 }
