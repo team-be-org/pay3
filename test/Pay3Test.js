@@ -56,4 +56,37 @@ it("should userWithdraw ETH from the charged value of the token", async function
   expect(newChargedValue).to.equal(0);
 });
 
+//追加箇所（moneyCollection）
+
+it("should subtract serviceFee from tokenChargedValue and add to servicerWallet when calling moneyCollection()", async function() {
+  // Mint some tokens and set their subscribeState to true
+  await pay3.connect(user).mint();
+  await pay3.connect(user).subscribe(1, true);
+
+  // send ETH to tokenChargeValue
+  await pay3.connect(user).usersendETH(1, { value: ethers.utils.parseEther("1") });
+  // Check initial values of tokenChargedValue and servicerWallet
+  const initialToken1Value = await pay3.getTokenChargedValue(1);
+  const initialServicerWallet = await pay3.servicerWallet();
+
+  // Call moneyCollection
+  await pay3.connect(owner).moneyCollection();
+
+  // subscriotState to true
+  await pay3.connect(user).subscribe(1, true);
+
+  // Check new values of tokenChargedValue and servicerWallet
+  const newToken1Value = await pay3.getTokenChargedValue(1);
+  const newServicerWallet = await pay3.servicerWallet();
+  const serviceFee = ethers.utils.parseEther("0.01")
+  console.log(initialToken1Value);
+  console.log(newToken1Value);
+  // Check that tokenChargedValue has been reduced by serviceFee for both tokens
+  expect(newToken1Value).to.equal(initialToken1Value.sub(serviceFee));
+
+  // Check that servicerWallet has increased by serviceFee for both tokens
+  expect(newServicerWallet).to.equal(initialServicerWallet.add(serviceFee));
+});
+
+
 });
