@@ -84,14 +84,14 @@ const App = () => {
         console.log("ethValue", ethValue)
         const options = {value: ethers.utils.parseEther(ethValue)}
         await connectedContract.usersendETH(tokenId, options)
-        setDisplay("charge finished")
+        setDisplay("")
         getBalance()
       } else {
         console.log("Ethereum object doesn't exist");
       }
     } catch (error) {
       console.log(error);
-      setDisplay("error");
+      setDisplay("");
     }
   }
 
@@ -104,14 +104,14 @@ const App = () => {
         const signer = provider.getSigner()
         const connectedContract = new ethers.Contract(CONTRACT_ADDRESS, myNft.abi, signer)
         await connectedContract.userWithdraw(tokenId)
-        setDisplay("charge finished")
+        setDisplay("")
         getBalance()
       } else {
         console.log("Ethereum object doesn't exist");
       }
     } catch (error) {
       console.log(error);
-      setDisplay("error");
+      setDisplay("");
     }
   }
 
@@ -125,10 +125,10 @@ const App = () => {
   const renderWalletControlUI = () => (
     <div>
       <div style={{display: 'flex', justifyContent: 'center'}}></div>
-        <button onClick={ChargeExecution} className="cta-button mint-button" style={{width: "150px"}}>
+        <button  className="cta-button mint-button" style={{width: "150px"}}>
           Collects
         </button>
-        <button onClick={WithdrawExecution} className="cta-button mint-button" style={{width: "150px"}}>
+        <button className="cta-button mint-button" style={{width: "150px"}}>
           Withdraw
         </button>
       <div/>
