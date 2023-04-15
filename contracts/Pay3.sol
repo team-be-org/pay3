@@ -39,4 +39,17 @@ contract Pay3 is ERC721 {
     function getTokenChargedValue(uint256 tokenID) public view returns (uint256) {
         console.log("tokenChargedValue[tokenID] is %s", tokenChargedValue[tokenID]);
     return tokenChargedValue[tokenID];
-    }}
+    }
+
+  function withdraw(uint256 tokenID) public {
+    // check tokenID is owned by msg.sender
+    require(ownerOf(tokenID) == msg.sender, "You are not the owner of this token");
+
+    uint256 amount = tokenChargedValue[tokenID];
+    bool success = false;
+    address payable recipient = payable(msg.sender);
+    (success, ) = recipient.call{value: amount}("");
+    require(success, "Failed to transfer Ether");
+    tokenChargedValue[tokenID] = 0;
+  }
+}
