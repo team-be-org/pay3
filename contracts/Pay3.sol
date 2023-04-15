@@ -14,6 +14,7 @@ contract Pay3 is ERC721 {
 
     //subsribe state map
     mapping(uint256 => bool) public subscribeState;
+    mapping(uint256 => uint256) public tokenChargedValue;
 
     constructor() ERC721("Pay3", "PAY3") {}
 
@@ -27,4 +28,15 @@ contract Pay3 is ERC721 {
     function subscribe(uint256 tokenId, bool state) public {
         subscribeState[tokenId] = state;
     }
-}
+   function usersendETH(uint256 tokenID) public payable {
+        require(msg.value > 0, "You need to send some Ether");
+        console.log("msg.value is %s", msg.value);
+        tokenChargedValue[tokenID] += msg.value;
+
+
+    }
+
+    function getTokenChargedValue(uint256 tokenID) public view returns (uint256) {
+        console.log("tokenChargedValue[tokenID] is %s", tokenChargedValue[tokenID]);
+    return tokenChargedValue[tokenID];
+    }}
