@@ -1,24 +1,20 @@
 import { useState, useEffect } from 'react'
 import { ethers } from 'ethers'
 import Modal from './components/Modal'
-import twitterLogo from './assets/svgviewer-output.svg'
 import openseaLogo from './assets/opensea-logo.png'
 import myNft from './utils/Pay3.json'
 import './App.css';
 
 const OPENSEA_LINK = 'https://opensea.io/collection/pay3';
-// const TOTAL_MINT_COUNT = 100;
-
-//const CONTRACT_ADDRESS = "0xBCF3a2D0Ec7F39a346490e7C30163ddf6De6a268";
 const CONTRACT_ADDRESS = require("./utils/contractAddress.json").contractAddress;
 const ethScanContractURL = 'https://etherscan.io/address/' + CONTRACT_ADDRESS + '#writeContract';
 
 const App = () => {
-  let totalMinted = "?";
   const [currentAccount, setCurrentAccount] = useState("")
   const [miningAnimation, setMiningAnimation] = useState(false)
-  const [mintTotal, setMintTotal] = useState(totalMinted)
-  const [text, setText] = useState("")
+  const [display, setDisplay] = useState("...")
+  const [tokenId, setTokenId] = useState(1)
+  const [ethValue, setEthValue] = useState("")
 
   const checkIfWalletIsConnected = async () => {
     const { ethereum } = window;
@@ -37,7 +33,7 @@ const App = () => {
       const account = accounts[0];
       console.log("Found an authorized account:", account);
       setCurrentAccount(account)
-      setupEventListener()
+      //setupEventListener()
       // getNumberOfMinted()
     } else {
       console.log("No authorized account found")
@@ -58,95 +54,93 @@ const App = () => {
       console.log("Connected", accounts[0])
       setCurrentAccount(accounts[0])
 
-      setupEventListener()
+      //setupEventListener()
     } catch (error) {
       console.log(error)
     }
   }
 
-  const getNumberOfMinted = async () => {
-    console.log("now getting number of minted")
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = provider.getSigner();
-    const connectedContract = new ethers.Contract(CONTRACT_ADDRESS, myNft.abi, signer);
-    // let count = await connectedContract.getNumberOfMinted();
-    // console.log("NumberOfMinted", count.toString())
-    // setMintTotal(count.toString())
-  }
-
-  const setupEventListener = async () => {
+  async function mintNFT() {
     try {
       const { ethereum } = window;
-
       if (ethereum) {
         const provider = new ethers.providers.Web3Provider(ethereum);
-        const signer = provider.getSigner();
-        const connectedContract = new ethers.Contract(CONTRACT_ADDRESS, myNft.abi, signer);
+        const signer = provider.getSigner()
+        const connectedContract = new ethers.Contract(CONTRACT_ADDRESS, myNft.abi, signer)
 
-        connectedContract.on("Mint", (from, color, signature) => {
-          //console.log(from, color, signature)
-        })
-        console.log("Setup event listener!")
+        const options = {value: ethers.utils.parseEther("0.01")}
+        setDisplay("start minting...")
+        let response = await connectedContract.mint(options)
+        setDisplay("mint finished")
+        console.log(`tokenId: ${response}`);
       } else {
-        console.log("Ethereum object doesn't exist")
+        console.log("Ethereum object doesn't exist");
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
+      setDisplay("error");
     }
-  }
-
-  const askContractToMintNft = async () => {
-      try {
-        const { ethereum } = window;
-
-        if (ethereum) {
-          const provider = new ethers.providers.Web3Provider(ethereum);
-          const signer = provider.getSigner()
-          const connectedContract = new ethers.Contract(CONTRACT_ADDRESS, myNft.abi, signer)
-
-          //pre check
-          let isInLimit = await connectedContract.isInLimit()
-          if(!isInLimit) {
-            alert("You already minted upto limit")
-            return;
-          }
-
-          let nftTxn;
-          const options = {value: ethers.utils.parseEther("0.01")}
-          nftTxn = await connectedContract.mint(text, options)
-          console.log("Mining... please wait")
-          setMiningAnimation(true);
-          await nftTxn.wait()
-          console.log(nftTxn)
-          console.log(`Mined, tee transaction: https://etherscan.io/tx/${nftTxn.hash}`)
-          setMiningAnimation(false)
-        } else {
-          console.log("Ethereum object doesn't exist")
-        }
-      } catch (error) {
-        console.log(error)
-      }
   }
 
   const ChargeExecution = async () => {
-    // will implement later
+    try {
+      const { ethereum } = window;
+      if (ethereum) {
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const signer = provider.getSigner()
+        const connectedContract = new ethers.Contract(CONTRACT_ADDRESS, myNft.abi, signer)
+
+        if(!ethValue){
+          setDisplay("no eth value")
+          return
+        }
+        console.log("ethValue", ethValue)
+        const options = {value: ethers.utils.parseEther(ethValue)}
+        await connectedContract.usersendETH(tokenId, options)
+        setDisplay("charge finished")
+      } else {
+        console.log("Ethereum object doesn't exist");
+      }
+    } catch (error) {
+      console.log(error);
+      setDisplay("error");
+    }
+  }
+
+  const SubscriptionOnOff = async (state) => {
+    const { ethereum } = window;
+    if (!ethereum) {return}
+    try {
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const signer = provider.getSigner()
+        const connectedContract = new ethers.Contract(CONTRACT_ADDRESS, myNft.abi, signer)
+        await connectedContract.subscribe(tokenId, state)
+        const stateStr = state?  "subscription state ON " : "subscription state OFF"
+        setDisplay(stateStr)
+    } catch (error) {
+      console.log(error);
+      setDisplay("error");
+    }
   }
 
   const SubscriptionOn = async () => {
-    // will implement later
+    await SubscriptionOnOff(true)
   }
 
   const SubscriptionOff = async () => {
-    // will implement later
+    await SubscriptionOnOff(false)
   }
 
   useEffect(() => {
     checkIfWalletIsConnected()
-    getNumberOfMinted()
   })
 
   const handleChange = (e) => {
-    setText(() => e.target.value)
+    setTokenId(() => e.target.value)
+  }
+
+  const handleEthValueChange = (e) => {
+    setEthValue(() => e.target.value)
   }
 
   const renderNotConnectedContainer = () => (
@@ -159,7 +153,7 @@ const App = () => {
     <div>
       <p className="sub-text">
       </p>
-      <button onClick={askContractToMintNft} className="cta-button mint-button">
+      <button onClick={mintNFT} className="cta-button mint-button">
         Mint Now
       </button>
     </div>
@@ -168,10 +162,7 @@ const App = () => {
   const renderWalletControlUI = () => (
     <div style={{display: 'flex', justifyContent: 'center'}}>
       <div style={{marginRight: '10px'}}>
-        <input className="text-box" placeholder="Wallet Num" value={text} onChange={handleChange} type="text" style={{width: "150px"}}/>
-      </div>
-      <div style={{marginRight: '10px'}}>
-        <input className="text-box" placeholder="val (ETH)" value={text} onChange={handleChange} type="text" style={{width: "100px"}} />
+        <input className="text-box" placeholder="val (ETH)" value={ethValue} onChange={handleEthValueChange} type="text" style={{width: "100px"}} />
       </div>
       <div>
         <button onClick={ChargeExecution} className="cta-button mint-button">
@@ -183,9 +174,6 @@ const App = () => {
 
   const renderSubscriptionOnOffUI = () => (
     <div style={{display: 'flex', justifyContent: 'center'}}>
-      <div style={{marginRight: '10px'}}>
-        <input className="text-box" placeholder="Wallet Num" value={text} onChange={handleChange} type="text" style={{width: "150px"}}/>
-      </div>
       <div>
         <button onClick={SubscriptionOn} className="cta-button mint-button">
           On
@@ -211,6 +199,11 @@ const App = () => {
             Pay3 is a lightweight subscription payment solution</p>
           {currentAccount === "" ? renderNotConnectedContainer() :renderMintUI()}
           <hr/>
+          <div style={{marginRight: '10px'}}>
+          wallet num:
+          <input className="text-box" placeholder="Wallet Num" value={tokenId} onChange={handleChange} type="text" style={{width: "150px"}}/>
+          <p/>
+        </div>
           {currentAccount === "" ? null :renderWalletControlUI()}
           <p/>
           {currentAccount === "" ? null :renderSubscriptionOnOffUI()}
@@ -218,6 +211,12 @@ const App = () => {
           {/* <p className="sub-text">
             {mintTotal} of 100 NFTs minted.
           </p> */}
+          <textarea
+            style={{ height: "200px", width: "80%"}}
+            className="text-area"
+            value={display}
+          />
+          <p/>
           <a
             className="opensea-button"
             href={OPENSEA_LINK}
