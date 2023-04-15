@@ -23,4 +23,15 @@ describe("Pay3", function () {
     await expect(() => pay3.connect(user).mint({ value: mintAmount })).to.changeEtherBalance(user, ethers.BigNumber.from(0).sub(mintAmount));
     expect(await pay3.balanceOf(await user.getAddress())).to.equal(1);
   });
+//ここから追記。
+it("should add ETH to the charged value of the token", async function() {
+  await pay3.connect(user).mint();
+  const tokenID = 1
+  const value = ethers.utils.parseEther("1");
+  const initialChargedValue = await pay3.getTokenChargedValue(tokenID);
+  await pay3.connect(owner).usersendETH(tokenID, { value });
+  const newChargedValue = await pay3.getTokenChargedValue(tokenID);
+  expect(newChargedValue).to.equal(initialChargedValue.add(value));
+});
+  
 });
