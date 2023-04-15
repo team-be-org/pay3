@@ -5,10 +5,11 @@
 pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "hardhat/console.sol";
 
-contract Pay3 is ERC721 {
+contract Pay3 is ERC721, Ownable {
     using Counters for Counters.Counter;
     Counters.Counter private currentTokenId;
 
@@ -17,6 +18,7 @@ contract Pay3 is ERC721 {
     mapping(uint256 => uint256) public tokenChargedValue;
     uint256 public servicerWallet;
     uint256 public serviceFee;
+
 
     constructor() ERC721("Pay3", "PAY3") {
         serviceFee = 0.01 ether;
@@ -55,7 +57,7 @@ contract Pay3 is ERC721 {
     tokenChargedValue[tokenID] = 0;
   }
 
-  function moneyCollection() public {
+  function moneyCollection() public onlyOwner {
     console.log(currentTokenId.current());
     for(uint256 i = 1; i <= currentTokenId.current(); i++) {
     if(subscribeState[i] == true) {
@@ -66,4 +68,11 @@ contract Pay3 is ERC721 {
     }
 }
   }
+  function withdrawServicerFee() external onlyOwner{
+    uint256 amount = servicerWallet;
+    require(amount >= 0);
+    payable(owner()).transfer(amount);
+    servicerWallet = 0;
+}
+  
 }

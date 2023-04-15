@@ -88,5 +88,28 @@ it("should subtract serviceFee from tokenChargedValue and add to servicerWallet 
   expect(newServicerWallet).to.equal(initialServicerWallet.add(serviceFee));
 });
 
+it("should withdraw the servicer fee from the contract", async function () {
+  // Mint a token and add ETH to its charged value
+  await pay3.connect(user).mint();
+  const tokenID = 1;
+  const value = ethers.utils.parseEther("1");
+  await pay3.connect(user).usersendETH(tokenID, { value });
+
+  // Check initial values of servicerWallet and contract balance
+  const initialServicerWallet = await pay3.servicerWallet();
+  const initialBalance = await ethers.provider.getBalance(pay3.address);
+
+  // Call withdrawServicerFee
+  await pay3.withdrawServicerFee();
+
+  // Check new values of servicerWallet and contract balance
+  const newServicerWallet = await pay3.servicerWallet();
+  const newBalance = await ethers.provider.getBalance(pay3.address);
+
+  // Check that the servicer fee has been withdrawn and transferred to the owner's wallet
+  expect(newServicerWallet).to.equal(0);
+  expect(newBalance).to.equal(initialBalance.sub(initialServicerWallet));
+});
+
 
 });
