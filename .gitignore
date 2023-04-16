@@ -4,3 +4,4 @@ artifacts
 cache/solidity-files-cache.json
 frontend2/src/utils
 frontend2/utils
+.env
