@@ -1,7 +1,6 @@
+node_modules/
+artifacts/
+cache/
+frontend/src/utils
 .DS_Store
-node_modules
-artifacts
-cache/solidity-files-cache.json
-frontend2/src/utils
-frontend2/utils
 .env
