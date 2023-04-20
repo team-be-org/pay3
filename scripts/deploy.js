@@ -10,10 +10,10 @@ async function main() {
   await token.deployed();
 
   fs.writeFileSync(
-    "frontend2/src/utils/contractAddress.json",
+    "frontend/src/utils/contractAddress.json",
     '{"contractAddress": "' + token.address + '"}'
   )
-  fs.copyFileSync("artifacts/contracts/Pay3.sol/Pay3.json", "frontend2/src/utils/Pay3.json")
+  fs.copyFileSync("artifacts/contracts/Pay3.sol/Pay3.json", "frontend/src/utils/Pay3.json")
   console.log("Pay3 deployed to:", token.address);
 }
 

@@ -1,6 +1,8 @@
 node_modules/
 artifacts/
 cache/
-frontend/src/utils
+frontend/src/utils/
+.vscode/
 .DS_Store
 .env
+frontend/src/utils/Pay3.json
