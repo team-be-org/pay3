@@ -1,0 +1,182 @@
+.Operation {
+    height: 150vh;
+    background-color: #0d1116;
+    overflow: scroll;
+    padding-left: 50px;
+  }
+  
+  .Main {
+    height: 150vh;
+    background-color: #444;
+    overflow: scroll;
+    padding-left: 50px;
+  }
+  
+  .container {
+    display: grid;
+    grid-template-columns: 400px 1fr; /* 左側は250px、右側は自動調整 */
+    grid-template-rows: 1fr;
+    height: 100vh;
+  }
+  
+  .header-container {
+    padding-top: 10px;
+    background: white;
+    min-height: 90vh;
+    width: 60%;
+    background: linear-gradient( to right bottom, rgba(0, 4, 231, 0.6), rgba(255, 255, 255, 0.2));
+    -webkit-border-radius: 2rem;
+    -moz-border-radius: 2rem;
+    -ms-border-radius: 2rem;
+    -o-border-radius: 2rem;
+    border-radius: 2rem;
+    z-index: 9;
+    /* -webkit-backdrop-filter: blur(2rem);
+    backdrop-filter: blur(2rem); */
+    box-shadow: 0 1px 1px hsl(0deg 0% 0% / 0.065), 0 2px 2px hsl(0deg 0% 0% / 0.065), 0 4px 4px hsl(0deg 0% 0% / 0.065), 0 8px 8px hsl(0deg 0% 0% / 0.065), 0 16px 16px hsl(0deg 0% 0% / 0.065);
+  }
+  
+  .header {
+    margin: 15px 0 15px 0;
+    font-size: 30px;
+    font-weight: bold;
+  }
+  
+  .sub-text {
+    font-size: 25px;
+    color: #fff;
+  }
+  .explain-text {
+    width: 60%;
+    font-size: 18px;
+    color: #fff;
+    padding: 0px;
+  }
+  
+  .list-container {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    width: 900px;
+    margin-bottom: 50px;
+  }
+  
+  .list-item {
+    padding: 5px;
+    font-size: 32px;
+    color: #fff;
+  }
+  
+  .select-box{
+    margin: 0px 0px 0px 0px;
+    width: 150px;
+    height: 40px;
+    border-radius: 5px;
+    border: 1px solid #000000;
+    padding: 5px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #000000;
+    background-color: #ffffff;
+  }
+  
+  .text-box{
+    margin: 0px 0px 0px 0px;
+    width: 200px;
+    height: 30px;
+    border-radius: 5px;
+    border: 1px solid #000000;
+    padding: 5px 10px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #000000;
+    background-color: #ffffff;
+  }
+  
+  .status-box{
+    height: 200px;
+    width: 920px;
+    font-size: 36px;
+  }
+  
+  .gradient-text {
+    background: -webkit-linear-gradient(left, #2e09e8 30%, #35a0e2 60%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .cta-button {
+    background: -webkit-linear-gradient(left, #111112, #6f76ff);
+    background-size: 200% 200%;
+    animation: gradient-animation 4s ease infinite;
+    height: 45px;
+    width: 150px;
+    border: 0;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+  }
+  
+  .connect-wallet-button {
+    background: -webkit-linear-gradient(left, #096003, #000507);
+    background-size: 200% 200%;
+    -webkit-animation: gradient-animation 4s ease infinite;
+    animation: gradient-animation 4s ease infinite;
+  }
+  
+  
+  .footer-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 30px;
+    z-index: 7;
+  }
+  
+  .footer-text {
+    margin: 3px 10px 5px 0px;
+    color: #000000;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  /* KeyFrames */
+  
+  @-webkit-keyframes gradient-animation {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+  
+  @-moz-keyframes gradient-animation {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+  
+  @keyframes gradient-animation {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }

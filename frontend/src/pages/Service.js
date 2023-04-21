@@ -1,9 +1,19 @@
+import {React} from 'react';
+import Main from '../components/ServiceMain';
+import Operation from '../components/ServiceOperation';
+import {RecoilRoot} from 'recoil';
 
-
-
-const App = () => {
+function App() {
   return (
-    <div className="App">
+    <div className="container">
+      <RecoilRoot>
+        <div className="panel">
+          < Operation />
+        </div>
+        <div className="main">
+          < Main />
+        </div>
+      </RecoilRoot>
     </div>
   );
 }
